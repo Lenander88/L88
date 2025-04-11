@@ -56,14 +56,10 @@ if ($result.Response -eq 0) {
         Copy-Item -Path .\AutopilotHWID.csv -Destination "C:\$($serialNumber).csv" -Force -ErrorAction:SilentlyContinue
     }
 
-    $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The computer will shut down when this window is closed."
-    Write-Host -BackgroundColor Black -ForegroundColor Red $infoMessage
-    [System.Windows.MessageBox]::Show($infoMessage, 'OSDCloud', 'OK', 'Error') | Out-Null
-#    wpeutil shutdown
+    $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash and click Conitnue to start deployment."
+    Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
+    [System.Windows.MessageBox]::Show($infoMessage, 'OSDCloud', 'Continue', 'Warning') | Out-Null
     
-    Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
-    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
-
 } else {
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
