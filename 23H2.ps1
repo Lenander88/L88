@@ -23,11 +23,11 @@ $result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "app
 
 if ($result.Response -eq 0) {
 
-    Invoke-WebRequest -Uri "https://github.com/dwp-lab/OSDCloud/raw/main/PCPKsp.dll" -OutFile X:\Windows\System32\PCPKsp.dll
+    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/PCPKsp.dll" -OutFile X:\Windows\System32\PCPKsp.dll
     rundll32 X:\Windows\System32\PCPKsp.dll,DllInstall
 
-    Invoke-WebRequest -Uri "https://github.com/dwp-lab/OSDCloud/raw/main/OA3.cfg" -OutFile OA3.cfg
-    Invoke-WebRequest -Uri "https://github.com/dwp-lab/OSDCloud/raw/main/oa3tool.exe" -OutFile oa3tool.exe
+    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/OA3.cfg" -OutFile OA3.cfg
+    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/oa3tool.exe" -OutFile oa3tool.exe
     Remove-Item .\OA3.xml -ErrorAction:SilentlyContinue
     .\oa3tool.exe /Report /ConfigFile=.\OA3.cfg /NoKeyCheck
 
