@@ -72,4 +72,5 @@ $form.Controls.Add($cBox2)
   
 $form.ShowDialog()
   
-$output = $script:locationResult
+$grouptag = $script:locationResult
+Write-Output $grouptag
