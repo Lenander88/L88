@@ -17,7 +17,7 @@ if ($serialNumber) {
     wpeutil shutdown
 }
 
-(Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
+Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
 $body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = "https://prod-145.westus.logic.azure.com:443/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=n0urWoGWa2OXN-4ba0U7UwfEM8i9vwTuSHx2PrSVtvU"
 $result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "application/json; charset=utf-8" -UseBasicParsing    
 
@@ -63,7 +63,7 @@ if ($result.Response -eq 0) {
     
     Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
-    
+
 } else {
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
