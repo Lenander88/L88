@@ -52,8 +52,8 @@ $cBox2.Text = "Choose group tag"
   
 ###############"Add descriptions to combo box"##############
 
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/grouptags.csv' -Outfile "X:\grouptags.csv" 
-Import-CSV "X:\grouptags.csv" | ForEach-Object {
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/grouptags.csv' -Outfile grouptags.csv 
+Import-CSV ".\grouptags.csv" | ForEach-Object {
     $cBox2.Items.Add($_.grouptags)
       
 }
