@@ -66,7 +66,7 @@ $button.Top = 45;
 $button.Width = 100;
 $button.Text = "OK";
 $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
-$Button.Font = New-Object System.Drawing.Font("Times New Roman",10,[System.Drawing.FontStyle]::BOLD)
+$Button.Font = New-Object System.Drawing.Font("Times New Roman",10,[System.Drawing.FontStyle])
 ############# This is when you have to close the form after getting values
 $eventHandler = [System.EventHandler]{
 $cBox2.Text;
