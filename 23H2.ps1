@@ -64,7 +64,7 @@ $button = New-Object "System.Windows.Forms.Button";
 $button.Left = 360;
 $button.Top = 45;
 $button.Width = 100;
-$button.Text = “OK”;
+$button.Text = "OK";
 $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
 $Button.Font = New-Object System.Drawing.Font("Comic Sans",12,[System.Drawing.FontStyle]::BOLD)
 ############# This is when you have to close the form after getting values
@@ -95,16 +95,16 @@ $grouptag = $script:locationResult
 Write-Output $grouptag
 
 Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
-$body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = "https://prod-145.westus.logic.azure.com:443/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=n0urWoGWa2OXN-4ba0U7UwfEM8i9vwTuSHx2PrSVtvU"
+$body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = 'https://prod-145.westus.logic.azure.com:443/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=n0urWoGWa2OXN-4ba0U7UwfEM8i9vwTuSHx2PrSVtvU'
 $result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "application/json; charset=utf-8" -UseBasicParsing    
 
 if ($result.Response -eq 0) {
 
-    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/PCPKsp.dll" -OutFile X:\Windows\System32\PCPKsp.dll
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/PCPKsp.dll' -OutFile X:\Windows\System32\PCPKsp.dll
     rundll32 X:\Windows\System32\PCPKsp.dll,DllInstall
 
-    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/OA3.cfg" -OutFile OA3.cfg
-    Invoke-WebRequest -Uri "https://github.com/Lenander88/L88/raw/main/oa3tool.exe" -OutFile oa3tool.exe
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/OA3.cfg' -OutFile OA3.cfg
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/oa3tool.exe' -OutFile oa3tool.exe
     Remove-Item .\OA3.xml -ErrorAction:SilentlyContinue
     .\oa3tool.exe /Report /ConfigFile=.\OA3.cfg /NoKeyCheck
 
