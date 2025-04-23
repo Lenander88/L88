@@ -35,13 +35,8 @@ if ($result.Response -eq 0) {
 
 
     if (Test-Path .\OA3.xml) {
-        ###################Load Assembly for creating form & button######
-  
         [void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
         [void][System.Reflection.Assembly]::LoadWithPartialName( "Microsoft.VisualBasic")
-  
-  
-        #####Define the form size & placement
         
         $form = New-Object "System.Windows.Forms.Form";
         $form.Width = 500;
@@ -49,55 +44,40 @@ if ($result.Response -eq 0) {
         $form.Text = "Digital Workplace Group Tag";
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
         $form.ControlBox = $True
-        
-        
-        ##############Define text label2
-        
+
         $textLabel2 = New-Object "System.Windows.Forms.Label";
         $textLabel2.Left = 25;
         $textLabel2.Top = 45;
         $textLabel2.Text = "Group tag";
-        
-        
-        ############Define text box2 for input
         
         $cBox2 = New-Object "System.Windows.Forms.combobox";
         $cBox2.Left = 150;
         $cBox2.Top = 45;
         $cBox2.width = 200;
         $cBox2.Text = "Choose group tag"
-        
-        
-        ###############"Add descriptions to combo box"##############
 
         Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/grouptags.csv' -Outfile grouptags.csv 
         Import-CSV ".\grouptags.csv" | ForEach-Object {
             $cBox2.Items.Add($_.grouptags)| out-null
             
         }
-  
-  
-        #############define OK button
+
         $button = New-Object "System.Windows.Forms.Button";
         $button.Left = 360;
         $button.Top = 45;
         $button.Width = 100;
         $button.Text = "OK";
         $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
-        #$Button.Font = New-Object System.Drawing.Font("Times New Roman",10,[System.Drawing.FontStyle]::Regular)
-        ############# This is when you have to close the form after getting values
+
         $eventHandler = [System.EventHandler]{
         $cBox2.Text;
         $form.Close();};
         $button.Add_Click($eventHandler) ;
-        
-        #############Add controls to all the above objects defined
+
         $form.Controls.Add($button);
         $form.Controls.Add($textLabel2);
         $form.Controls.Add($cBox2);
-        #$ret = $form.ShowDialog();
-        
-        #################return values
+
         $button.add_Click({    
 
             $script:locationResult = $cBox2.selectedItem 
@@ -150,8 +130,7 @@ if ($result.Response -eq 0) {
     Start-Sleep -Seconds 20
     wpeutil reboot
     
-#Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
-#$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+
 
 } else {
 
