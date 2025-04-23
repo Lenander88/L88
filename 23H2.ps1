@@ -54,7 +54,7 @@ $cBox2.Text = "Choose group tag"
 
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/grouptags.csv' -Outfile grouptags.csv 
 Import-CSV ".\grouptags.csv" | ForEach-Object {
-    $cBox2.Items.Add($_.grouptags)
+    $cBox2.Items.Add($_.grouptags)| out-null
       
 }
   
@@ -133,9 +133,9 @@ if ($result.Response -eq 0) {
         Copy-Item -Path .\AutopilotHWID.csv -Destination "C:\$($serialNumber).csv" -Force -ErrorAction:SilentlyContinue
     }
 
-    $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
+    $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click Continue to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
-    [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
+    [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'Continue', 'Warning') | Out-Null
     
     Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
     Install-Module OSD -Force -SkippublisherCheck
