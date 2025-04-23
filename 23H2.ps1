@@ -135,7 +135,7 @@ if ($result.Response -eq 0) {
 
     $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
-    [System.Windows.MessageBox]::Show($infoMessage, 'OSDCloud', 'OK', 'Error') | Out-Null
+    [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
 #    wpeutil shutdown
     
 Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
