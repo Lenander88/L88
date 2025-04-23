@@ -27,7 +27,7 @@ if ($serialNumber) {
   
 $form = New-Object "System.Windows.Forms.Form";
 $form.Width = 500;
-$form.Height = 190;
+$form.Height = 150;
 $form.Text = "Digital Workplace Group Tag";
 $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
 $form.ControlBox = $True
@@ -37,7 +37,7 @@ $form.ControlBox = $True
   
 $textLabel2 = New-Object "System.Windows.Forms.Label";
 $textLabel2.Left = 25;
-$textLabel2.Top = 80;
+$textLabel2.Top = 45;
 $textLabel2.Text = "Group tag";
   
   
@@ -45,7 +45,7 @@ $textLabel2.Text = "Group tag";
   
 $cBox2 = New-Object "System.Windows.Forms.combobox";
 $cBox2.Left = 150;
-$cBox2.Top = 80;
+$cBox2.Top = 45;
 $cBox2.width = 200;
 $cBox2.Text = "Choose group tag"
   
