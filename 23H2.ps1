@@ -136,10 +136,22 @@ if ($result.Response -eq 0) {
     $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
     [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
-#    wpeutil shutdown
     
-Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
+    Install-Module OSD -Force -SkippublisherCheck
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Import OSD PowerShell Module"
+    Import-Module OSD -Force
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
+    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild 23H2 -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
+    Start-Sleep -Seconds 20
+    wpeutil reboot
+    
+#Write-Host -BackgroundColor Black -ForegroundColor Yellow -NoNewLine 'Press any key to continue...'
+#$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
 } else {
 
