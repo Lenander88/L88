@@ -38,7 +38,7 @@ $form.ControlBox = $True
 $textLabel2 = New-Object "System.Windows.Forms.Label";
 $textLabel2.Left = 25;
 $textLabel2.Top = 80;
-$textLabel2.Text = "Label";
+$textLabel2.Text = "Group tag";
   
   
 ############Define text box2 for input
@@ -66,7 +66,7 @@ $button.Top = 45;
 $button.Width = 100;
 $button.Text = "OK";
 $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
-$Button.Font = New-Object System.Drawing.Font("Comic Sans",12,[System.Drawing.FontStyle]::BOLD)
+$Button.Font = New-Object System.Drawing.Font("Times New Roman",10,[System.Drawing.FontStyle]::BOLD)
 ############# This is when you have to close the form after getting values
 $eventHandler = [System.EventHandler]{
 $cBox2.Text;
