@@ -129,8 +129,6 @@ if ($result.Response -eq 0) {
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
     wpeutil reboot
-    
-
 
 } else {
 
