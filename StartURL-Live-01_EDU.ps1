@@ -86,7 +86,7 @@ if ($result.Response -eq 0) {
   
         $form.ShowDialog()
   
-        $grouptag = $script:locationResult
+        $OSBuild = $script:locationResult
         Write-Output $OSBuild
 
     if (Test-Path .\OA3.xml) {
