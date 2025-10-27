@@ -55,8 +55,8 @@ if ($result.Response -eq 0) {
         $cBox2.Text = "Choose OS Build"
 
         Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
-        Import-CSV ".\grouptags.csv" | ForEach-Object {
-            $cBox2.Items.Add($_.grouptags)| out-null
+        Import-CSV ".\OSBuild.csv" | ForEach-Object {
+            $cBox2.Items.Add($_.OSBuild)| out-null
             
         }
 
