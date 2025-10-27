@@ -56,7 +56,9 @@ if ($result.Response -eq 0) {
 
         Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
         Import-CSV ".\OSBuild.csv" | ForEach-Object {
-            $cBox2.Items.Add($_.OSBuild)| out-null
+            if (![string]::IsNullOrWhiteSpace($_.OSBuild)) {
+                $cBox2.Items.Add($_.OSBuild) | Out-Null
+            }
             
         }
 
