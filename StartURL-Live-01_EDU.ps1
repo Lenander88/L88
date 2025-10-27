@@ -56,9 +56,7 @@ if ($result.Response -eq 0) {
 
         Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
         Import-CSV ".\OSBuild.csv" | ForEach-Object {
-            if (![string]::IsNullOrWhiteSpace($_.OSBuild)) {
-                $cBox2.Items.Add($_.OSBuild) | Out-Null
-            }
+            $cBox2.Items.Add($_.OSBuild)| out-null
             
         }
 
@@ -181,7 +179,7 @@ if ($result.Response -eq 0) {
     Import-Module OSD -Force
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $OSbuild -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $($OSbuild) -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
@@ -196,7 +194,7 @@ if ($result.Response -eq 0) {
     Import-Module OSD -Force
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $OSBuild -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $($OSBuild) -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
