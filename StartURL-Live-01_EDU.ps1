@@ -4,6 +4,78 @@ Start-Sleep -Seconds 5
 Add-Type -AssemblyName PresentationFramework
 $bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+#Set OSDCloud Vars
+$Global:MyOSDCloud = [ordered]@{
+    #Restart = [bool]$False
+    #RecoveryPartition = [bool]$true
+    #OEMActivation = [bool]$True
+    WindowsUpdate = [bool]$true
+    WindowsUpdateDrivers = [bool]$true
+    WindowsDefenderUpdate = [bool]$true
+    SetTimeZone = [bool]$true
+    #ClearDiskConfirm = [bool]$False
+    #ShutdownSetupComplete = [bool]$false
+    SyncMSUpCatDriverUSB = [bool]$true
+    #CheckSHA1 = [bool]$true
+}
+
+
+[void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
+[void][System.Reflection.Assembly]::LoadWithPartialName( "Microsoft.VisualBasic")
+
+    $form = New-Object "System.Windows.Forms.Form";
+    $form.Width = 500;
+    $form.Height = 150;
+    $form.Text = "Windows 11 OS Build";
+    $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
+    $form.ControlBox = $True
+
+    $textLabel2 = New-Object "System.Windows.Forms.Label";
+    $textLabel2.Left = 25;
+    $textLabel2.Top = 45;
+    $textLabel2.Text = "OS Build";
+
+    $cBox2 = New-Object "System.Windows.Forms.combobox";
+    $cBox2.Left = 150;
+    $cBox2.Top = 45;
+    $cBox2.width = 200;
+    $cBox2.Text = "Choose OS Build"
+
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
+    Import-CSV ".\OSBuild.csv" | ForEach-Object {
+        $cBox2.Items.Add($_.OSBuild)| out-null
+        
+    }
+
+    $button = New-Object "System.Windows.Forms.Button";
+    $button.Left = 360;
+    $button.Top = 45;
+    $button.Width = 100;
+    $button.Text = "OK";
+    $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
+
+    $eventHandler = [System.EventHandler]{
+    $cBox2.Text;
+    $form.Close();};
+    $button.Add_Click($eventHandler) ;
+
+    $form.Controls.Add($button);
+    $form.Controls.Add($textLabel2);
+    $form.Controls.Add($cBox2);
+
+    $button.add_Click({    
+
+        $script:locationResult = $cBox2.selectedItem 
+    })
+
+    $form.Controls.Add($button)
+    $form.Controls.Add($cBox2)
+
+    $form.ShowDialog()
+
+    $OSBuild = $script:locationResult
+    Write-Output $OSBuild
+
 
 if ($serialNumber) {
 
@@ -32,62 +104,6 @@ if ($result.Response -eq 0) {
     Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/oa3tool.exe' -OutFile oa3tool.exe
     Remove-Item .\OA3.xml -ErrorAction:SilentlyContinue
     .\oa3tool.exe /Report /ConfigFile=.\OA3.cfg /NoKeyCheck
-
-        [void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
-        [void][System.Reflection.Assembly]::LoadWithPartialName( "Microsoft.VisualBasic")
-        
-        $form = New-Object "System.Windows.Forms.Form";
-        $form.Width = 500;
-        $form.Height = 150;
-        $form.Text = "Windows 11 OS Build";
-        $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
-        $form.ControlBox = $True
-
-        $textLabel2 = New-Object "System.Windows.Forms.Label";
-        $textLabel2.Left = 25;
-        $textLabel2.Top = 45;
-        $textLabel2.Text = "OS Build";
-        
-        $cBox2 = New-Object "System.Windows.Forms.combobox";
-        $cBox2.Left = 150;
-        $cBox2.Top = 45;
-        $cBox2.width = 200;
-        $cBox2.Text = "Choose OS Build"
-
-        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
-        Import-CSV ".\OSBuild.csv" | ForEach-Object {
-            $cBox2.Items.Add($_.OSBuild)| out-null
-            
-        }
-
-        $button = New-Object "System.Windows.Forms.Button";
-        $button.Left = 360;
-        $button.Top = 45;
-        $button.Width = 100;
-        $button.Text = "OK";
-        $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
-
-        $eventHandler = [System.EventHandler]{
-        $cBox2.Text;
-        $form.Close();};
-        $button.Add_Click($eventHandler) ;
-
-        $form.Controls.Add($button);
-        $form.Controls.Add($textLabel2);
-        $form.Controls.Add($cBox2);
-
-        $button.add_Click({    
-
-            $script:locationResult = $cBox2.selectedItem 
-        })
-  
-        $form.Controls.Add($button)
-        $form.Controls.Add($cBox2)
-  
-        $form.ShowDialog()
-  
-        $OSBuild = $script:locationResult
-        Write-Output $OSBuild
 
     if (Test-Path .\OA3.xml) {
         [void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
