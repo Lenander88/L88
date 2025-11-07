@@ -26,7 +26,7 @@ $Global:MyOSDCloud = [ordered]@{
     $form = New-Object "System.Windows.Forms.Form";
     $form.Width = 500;
     $form.Height = 150;
-    $form.Text = "Windows 11 OS Build";
+    $form.Text = "EDU Selection";
     $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
     $form.ControlBox = $True
 
