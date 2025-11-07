@@ -26,24 +26,24 @@ $Global:MyOSDCloud = [ordered]@{
     $form = New-Object "System.Windows.Forms.Form";
     $form.Width = 500;
     $form.Height = 150;
-    $form.Text = "EDU Selection";
+    $form.Text = "EDU Build";
     $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
     $form.ControlBox = $True
 
     $textLabel2 = New-Object "System.Windows.Forms.Label";
     $textLabel2.Left = 25;
     $textLabel2.Top = 45;
-    $textLabel2.Text = "OS Build";
+    $textLabel2.Text = "EDU Build";
 
     $cBox2 = New-Object "System.Windows.Forms.combobox";
     $cBox2.Left = 150;
     $cBox2.Top = 45;
     $cBox2.width = 200;
-    $cBox2.Text = "Choose OS Build"
+    $cBox2.Text = "EDU Build"
 
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/OSBuild.csv' -Outfile OSBuild.csv 
-    Import-CSV ".\OSBuild.csv" | ForEach-Object {
-        $cBox2.Items.Add($_.OSBuild)| out-null
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU.csv' -Outfile EDU.csv 
+    Import-CSV ".\EDU.csv" | ForEach-Object {
+        $cBox2.Items.Add($_.EDU)| out-null
         
     }
 
@@ -74,7 +74,7 @@ $Global:MyOSDCloud = [ordered]@{
     $form.ShowDialog()
 
     $OSBuild = $script:locationResult
-    Write-Output $OSBuild
+    Write-Output $EDU
 
 
 if ($serialNumber) {
