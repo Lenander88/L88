@@ -126,6 +126,12 @@ if ($result.Response -eq 0) {
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
     Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild 24H2 -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
 
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1 # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
+   
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
     wpeutil reboot
@@ -140,6 +146,12 @@ if ($result.Response -eq 0) {
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
     Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild 24H2 -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1 # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
+    Invoke-WebRequest -Uri 'https://github.com/dwp-lab/OSDCloud/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
 
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
