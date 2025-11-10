@@ -70,7 +70,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
 
     $form.ShowDialog()
 
-    $OSBuild = $script:locationResult
+    $EDU = $script:locationResult
     Write-Output $EDU
 $Standard = "'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
 $Stockholm = "'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
@@ -189,7 +189,7 @@ if ($result.Response -eq 0) {
 
     $Params = @{
     OSVersion = "Windows 11"
-    OSBuild = "$($OSbuild)"
+    OSBuild = "24H2"
     OSEdition = "Enterprise"
     OSLanguage = "en-us"
     OSLicense = "Retail"
@@ -247,7 +247,7 @@ if ($result.Response -eq 0) {
 #================================================
     Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
     Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
-    Invoke-WebRequest -Uri $($EDU) # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri $EDU # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
     Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
     Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
 
