@@ -1,5 +1,5 @@
 ﻿EDU
-$Standard
-$Stockholm
-$Ballerup
+Standard,'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1
+Stockholm,'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1
+Ballerup,'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1
 ...
