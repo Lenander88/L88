@@ -1,11 +1,20 @@
 #================================================
-#   [PreOS] Detect Virtual Machine and Set Display Resolution
+#   [PreOS] Perimeters
 #================================================
-if ((Get-MyComputerModel) -match 'Virtual') {
-    Write-Host  -ForegroundColor Green "Setting Display Resolution to 1600x"
-    Set-DisRes 1600
-}
 
+$Standard = "'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
+$Stockholm = "'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
+$Ballerup = "'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1"
+
+$Params = @{
+    OSVersion = "Windows 11"
+    OSBuild = "24H2"
+    OSEdition = "Enterprise"
+    OSLanguage = "en-us"
+    OSLicense = "Retail"
+    ZTI = $true
+    Firmware = $false
+}
 #=======================================================================
 #   [PreOS] EDU Build Selection
 #=======================================================================
@@ -72,9 +81,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
 
     $EDU = $script:locationResult
     Write-Output $EDU
-$Standard = "'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
-$Stockholm = "'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
-$Ballerup = "'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1"
+
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
 #=======================================================================
@@ -187,22 +194,14 @@ if ($result.Response -eq 0) {
         Copy-Item -Path .\AutopilotHWID.csv -Destination "C:\$($serialNumber).csv" -Force -ErrorAction:SilentlyContinue
     }
 
-    $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Retail"
-    ZTI = $true
-    Firmware = $false
-}
-#=======================================================================
-#   [OS] Start-OSDCloud and update OSD Module
-#=======================================================================
+
     $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
     [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
-    
+ 
+#=======================================================================
+#   [OS] Start-OSDCloud and update OSD Module
+#=======================================================================
     Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
     Install-Module OSD -Force
 
