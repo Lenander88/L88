@@ -197,7 +197,7 @@ if ($result.Response -eq 0) {
     Firmware = $false
 }
 #=======================================================================
-#   [OS] Start-OSDCloud
+#   [OS] Start-OSDCloud and update OSD Module
 #=======================================================================
     $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
@@ -231,7 +231,7 @@ if ($result.Response -eq 0) {
 } else {
 
 #=======================================================================
-#   [OS] Start-OSDCloud
+#   [OS] Start-OSDCloud and update OSD Module
 #=======================================================================
     Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
     Install-Module OSD -Force
