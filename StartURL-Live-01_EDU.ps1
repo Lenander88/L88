@@ -1,23 +1,26 @@
-Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud ZTI"
+#================================================
+#   [PreOS] Update Module
+#================================================
+if ((Get-MyComputerModel) -match 'Virtual') {
+    Write-Host  -ForegroundColor Green "Setting Display Resolution to 1600x"
+    Set-DisRes 1600
+}
+
+Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
+Install-Module OSD -Force
+
+Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
+Import-Module OSD -Force   
+
+#=======================================================================
+#   [PreOS] EDU Build Selection
+#=======================================================================
+Write-Host -BackgroundColor Black -ForegroundColor Green "Starting EDU Build Selection"
 Start-Sleep -Seconds 5
 
 Add-Type -AssemblyName PresentationFramework
 $bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
-#Set OSDCloud Vars
-$Global:MyOSDCloud = [ordered]@{
-    #Restart = [bool]$False
-    #RecoveryPartition = [bool]$true
-    #OEMActivation = [bool]$True
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    #WindowsDefenderUpdate = [bool]$true
-    #SetTimeZone = [bool]$true
-    #ClearDiskConfirm = [bool]$False
-    #ShutdownSetupComplete = [bool]$false
-    #SyncMSUpCatDriverUSB = [bool]$true
-    #CheckSHA1 = [bool]$true
-}
 
 
 [void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
@@ -74,9 +77,13 @@ $Global:MyOSDCloud = [ordered]@{
     $form.ShowDialog()
 
     $OSBuild = $script:locationResult
-    Write-Output $EDU
-
-
+    Write-Output $($EDU)
+$Standard = 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1'
+$Stockholm = 'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'
+$Ballerup = 'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'
+#=======================================================================
+#   [PreOS] Detect Serial Number and Prepare for AutoPilot
+#=======================================================================
 if ($serialNumber) {
 
     $bodyMessage | Add-Member -MemberType NoteProperty -Name "serialNumber" -Value $serialNumber
@@ -89,7 +96,9 @@ if ($serialNumber) {
     wpeutil shutdown
 }
 
-
+#=======================================================================
+#   [PreOS] AutoPilot Verification and Group Tag Selection
+#=======================================================================
 
 Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
 $body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = 'https://prod-145.westus.logic.azure.com:443/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=n0urWoGWa2OXN-4ba0U7UwfEM8i9vwTuSHx2PrSVtvU'
@@ -184,34 +193,60 @@ if ($result.Response -eq 0) {
         Copy-Item -Path .\AutopilotHWID.csv -Destination "C:\$($serialNumber).csv" -Force -ErrorAction:SilentlyContinue
     }
 
+    $Params = @{
+    OSVersion = "Windows 11"
+    OSBuild = "$($OSbuild)"
+    OSEdition = "Enterprise"
+    OSLanguage = "en-us"
+    OSLicense = "Retail"
+    ZTI = $true
+    Firmware = $false
+}
+#=======================================================================
+#   [OS] Start-OSDCloud
+#=======================================================================
     $infoMessage = "You cannot continue because the device is not ready for Windows AutoPilot. The HWHash has been generated and placed on the USB-stick, upload HWHash, reinsert USB-stick and click OK to start deployment."
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
     [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
     
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
-    Install-Module OSD -Force -SkippublisherCheck
-
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Import OSD PowerShell Module"
-    Import-Module OSD -Force
-
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $($OSbuild) -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+    Start-OSDCloud @Params
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1 # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
 
+#=======================================================================
+#   Restart-Computer
+#=======================================================================   
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
     wpeutil reboot
 
 } else {
 
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Update OSD PowerShell Module"
-    Install-Module OSD -Force -SkippublisherCheck
-
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Import OSD PowerShell Module"
-    Import-Module OSD -Force
-
+#=======================================================================
+#   [OS] Start-OSDCloud
+#=======================================================================
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud -ZTI -OSVersion 'Windows 11' -OSBuild $($OSBuild) -OSEdition Enterprise -OSLanguage en-us -OSLicense Retail
+    Start-OSDCloud @Params
 
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1 # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
+    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
+
+#=======================================================================
+#   Restart-Computer
+#=======================================================================    
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
     wpeutil reboot

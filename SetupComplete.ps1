@@ -54,41 +54,6 @@ if (-not (Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker')) {
     New-Item -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Force | Out-Null}
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 'PreventDeviceEncryption' -Value 1 -PropertyType DWord -Force | Out-Null
 
-# Create local admin account
-$local_user = @{
-    Name                 = 'EDU'
-    NoPassword           = $true
-}
-$user = New-LocalUser @local_user 
-$user | Set-LocalUser -PasswordNeverExpires $true 
-$user | Add-LocalGroupMember -Group "Administrators"
-
-# Skip "Privacy Experiance"
-$settings =
-[PSCustomObject]@{
-    Path  = "SOFTWARE\Policies\Microsoft\Windows\OOBE"
-    Name  = "DisablePrivacyExperience"
-    Value = 1
-} | group Path
-
-foreach ($setting in $settings) {
-    $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
-    if ($null -eq $registry) {
-        $registry = [Microsoft.Win32.Registry]::LocalMachine.CreateSubKey($setting.Name, $true)
-    }
-    $setting.Group | % {
-        $registry.SetValue($_.name, $_.value)
-    }
-    $registry.Dispose()
-}
-
-# Configure power settings
-# Disable sleep, hibernate and monitor standby on AC
-"powercfg /x -monitor-timeout-ac 0",
-"powercfg /x -standby-timeout-ac 0",
-"powercfg /x -hibernate-timeout-ac 0" | % {
-    cmd /c $_
-}
 # Restore Balanced plan after tasks
 Write-Host 'Setting PowerPlan to Balanced'
 Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 15
