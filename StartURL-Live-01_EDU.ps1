@@ -11,9 +11,9 @@ $Params = @{
     Firmware = $false
 }
 
-$Standard = Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1
-$Stockholm = Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1
-$Ballerup = Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1
+$Standard = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
+$Stockholm = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
+$Ballerup = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1"
 
 #=======================================================================
 #   [PreOS] EDU Build Selection
