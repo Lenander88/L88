@@ -1,4 +1,4 @@
-# OSDCloud SetupComplete.ps1; Location: C:\Windows\Setup\Scripts\SetupComplete.ps1
+# OSDCloud SetupComplete.ps1; Location: C:\Windows\Setup\Scripts\Setup_Stockholm.ps1
 # Logs setup process, imports OSD modules, sets power plan, runs custom SetupComplete.cmd, and reboots when finished.
 
 # Logging first
