@@ -1,16 +1,10 @@
 #================================================
-#   [PreOS] Update Module
+#   [PreOS] Detect Virtual Machine and Set Display Resolution
 #================================================
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host  -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
 }
-
-Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
-Install-Module OSD -Force
-
-Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
-Import-Module OSD -Force   
 
 #=======================================================================
 #   [PreOS] EDU Build Selection
@@ -77,7 +71,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.ShowDialog()
 
     $OSBuild = $script:locationResult
-    Write-Output $($EDU)
+    Write-Output $EDU
 $Standard = "'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
 $Stockholm = "'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
 $Ballerup = "'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1"
@@ -209,6 +203,13 @@ if ($result.Response -eq 0) {
     Write-Host -BackgroundColor Black -ForegroundColor Yellow $infoMessage
     [System.Windows.MessageBox]::Show($infoMessage, 'HWHash', 'OK', 'Warning') | Out-Null
     
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
+    Install-Module OSD -Force
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
+    Import-Module OSD -Force   
+
+
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
     Start-OSDCloud @Params
 #================================================
@@ -216,7 +217,7 @@ if ($result.Response -eq 0) {
 #================================================
     Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
     Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
-    Invoke-WebRequest -Uri $($EDU) # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
+    Invoke-WebRequest -Uri $EDU # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
     Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
     Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
 
@@ -232,6 +233,12 @@ if ($result.Response -eq 0) {
 #=======================================================================
 #   [OS] Start-OSDCloud
 #=======================================================================
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
+    Install-Module OSD -Force
+
+    Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
+    Import-Module OSD -Force
+
     Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
     Start-OSDCloud @Params
 
