@@ -49,7 +49,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
 
     Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU.csv' -Outfile EDU.csv 
     Import-CSV ".\EDU.csv" | ForEach-Object {
-        $cBox2.Items.Add($_.EDU)| out-null -echo off
+        $cBox2.Items.Add($_.EDU)| out-null
         
     }
 
@@ -80,7 +80,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.ShowDialog()
 
     $EDU = $script:locationResult
-    Write-Output $EDU -echo off
+    Write-Output $EDU
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
@@ -170,7 +170,7 @@ if ($result.Response -eq 0) {
         $form.ShowDialog()
   
         $grouptag = $script:locationResult
-        Write-Output $grouptag -echo off
+        Write-Output $grouptag
 
         [xml]$xmlhash = Get-Content -Path .\OA3.xml
         $hash=$xmlhash.Key.HardwareHash
