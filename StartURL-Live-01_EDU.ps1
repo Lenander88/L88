@@ -11,10 +11,6 @@ $Params = @{
     Firmware = $false
 }
 
-$Standard = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.ps1' -OutFile C:\Windows\Setup\Scripts\SetupComplete.ps1"
-$Stockholm = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Stockholm.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Stockholm.ps1"
-$Ballerup = "Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Setup_Ballerup.ps1'-OutFile C:\Windows\Setup\Scripts\Setup_Ballerup.ps1"
-
 #=======================================================================
 #   [PreOS] EDU Build Selection
 #=======================================================================
@@ -48,10 +44,16 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $cBox2.Text = "EDU Build"
 
     Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU.csv' -Outfile EDU.csv 
-    Import-CSV ".\EDU.csv" | ForEach-Object {
-        $cBox2.Items.Add($_.EDU)| out-null
-        
+
+# Create a hashtable to map names to URLs
+    $eduMap = @{}
+
+    Import-Csv ".\EDU.csv" | ForEach-Object {
+    $eduMap[$_.EDU] = $_.Command
+    $cBox2.Items.Add($_.EDU) | Out-Null
     }
+
+
 
     $button = New-Object "System.Windows.Forms.Button";
     $button.Left = 360;
@@ -69,10 +71,13 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.Controls.Add($textLabel2);
     $form.Controls.Add($cBox2);
 
-    $button.add_Click({    
 
-        $script:locationResult = $cBox2.selectedItem 
+    $button.add_Click({
+        $selectedName = $cBox2.SelectedItem
+        $script:locationResult = $eduMap[$selectedName]
+        $form.Close()
     })
+
 
     $form.Controls.Add($button)
     $form.Controls.Add($cBox2)
@@ -80,7 +85,10 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.ShowDialog()
 
     $EDU = $script:locationResult
-    Write-Output $EDU
+    Write-Output "Selected command: $EDU"
+
+    # Optional: Execute the command
+    Invoke-Expression $EDU
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
@@ -214,11 +222,28 @@ if ($result.Response -eq 0) {
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
-    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
-    $EDU # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
-    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
-    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
+
+Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+
+# Ensure PSWindowsUpdate is staged for post-boot use
+Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force
+
+# Ensure SetupComplete folder exists
+$setupPath = 'C:\OSDCloud\Scripts\SetupComplete'
+if (-not (Test-Path $setupPath)) {
+    New-Item -Path $setupPath -ItemType Directory -Force | Out-Null
+}
+
+# Run the selected EDU command (from ComboBox selection)
+Invoke-Expression $EDU
+
+# Download SetupComplete.cmd
+Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
+    -OutFile "$setupPath\SetupComplete.cmd"
+
+# Download Install-LCU.ps1
+Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' `
+    -OutFile "$setupPath\Install-LCU.ps1"
 
 #=======================================================================
 #   Restart-Computer
@@ -244,12 +269,28 @@ if ($result.Response -eq 0) {
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
-    Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force # Stage PSWindowsUpdate so it's available after first boot (no PSGallery needed in pre-OOBE)
-    Invoke-WebRequest -Uri $($EDU) # Runs automatically after setup comeplete, during pre-OOBE. Calls the custom SetupComplete.cmd
-    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' -OutFile C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd # Custom SetupComplete.cmd, triggered by SetupComplete.ps1. Calls Install-LCU.ps1
-    Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' -OutFile C:\OSDCloud\Scripts\SetupComplete\Install-LCU.ps1 # Installs the latest SSU/LCU + critical updates
 
+Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
+
+# Ensure PSWindowsUpdate is staged for post-boot use
+Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force
+
+# Ensure SetupComplete folder exists
+$setupPath = 'C:\OSDCloud\Scripts\SetupComplete'
+if (-not (Test-Path $setupPath)) {
+    New-Item -Path $setupPath -ItemType Directory -Force | Out-Null
+}
+
+# Run the selected EDU command (from ComboBox selection)
+Invoke-Expression $EDU
+
+# Download SetupComplete.cmd
+Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
+    -OutFile "$setupPath\SetupComplete.cmd"
+
+# Download Install-LCU.ps1
+Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' `
+    -OutFile "$setupPath\Install-LCU.ps1"
 #=======================================================================
 #   Restart-Computer
 #=======================================================================    
