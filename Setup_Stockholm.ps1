@@ -69,14 +69,14 @@ $settings =
     Path  = "SOFTWARE\Policies\Microsoft\Windows\OOBE"
     Name  = "DisablePrivacyExperience"
     Value = 1
-} | group Path
+} | Group-Object Path
 
 foreach ($setting in $settings) {
     $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
     if ($null -eq $registry) {
         $registry = [Microsoft.Win32.Registry]::LocalMachine.CreateSubKey($setting.Name, $true)
     }
-    $setting.Group | % {
+    $setting.Group | ForEach-Object {
         $registry.SetValue($_.name, $_.value)
     }
     $registry.Dispose()
@@ -86,7 +86,7 @@ foreach ($setting in $settings) {
 # Disable sleep, hibernate and monitor standby on AC
 "powercfg /x -monitor-timeout-ac 0",
 "powercfg /x -standby-timeout-ac 0",
-"powercfg /x -hibernate-timeout-ac 0" | % {
+"powercfg /x -hibernate-timeout-ac 0" | ForEach-Object {
     cmd /c $_
 }
 # Restore Balanced plan after tasks
