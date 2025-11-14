@@ -38,7 +38,7 @@ Set-PowerSettingSleepAfter -PowerSource AC -Minutes 0
 Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 0
 
 # Run your custom SetupComplete.cmd if present
-Write-OutPut 'Running Scripts in Custom OSDCloud SetupComplete Folder'
+Write-Output 'Running Scripts in Custom OSDCloud SetupComplete Folder'
 $SetupCompletePath = "C:\OSDCloud\Scripts\SetupComplete\SetupComplete.cmd"
 if (Test-Path $SetupCompletePath) {
     $SetupComplete = Get-ChildItem $SetupCompletePath -Filter SetupComplete.cmd
@@ -49,27 +49,34 @@ if (Test-Path $SetupCompletePath) {
 
 # Sets property in registry to disable Windows automatic encrytion from start during oobe phase, it does not block Intune bitlocker policy from encrypting devices post enrollment.  
 # https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/
-Write-Host -BackgroundColor Black -ForegroundColor Green "Disable Windows Automatic Encryption"
+Write-Host "Disable Windows Automatic Encryption"
 if (-not (Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker')) { 
     New-Item -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Force | Out-Null}
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 'PreventDeviceEncryption' -Value 1 -PropertyType DWord -Force | Out-Null
 
 # Create local admin account
+$Password = ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force
 $local_user = @{
-    Name                 = 'EDU'
-    Password           = 'Assa#26144'
+    Name     = 'EDU'
+    Password = $Password
 }
-$user = New-LocalUser @local_user 
-$user | Set-LocalUser -PasswordNeverExpires $true 
-$user | Add-LocalGroupMember -Group "Administrators"
-
-# Skip "Privacy Experiance"
-$settings =
-[PSCustomObject]@{
-    Path  = "SOFTWARE\Policies\Microsoft\Windows\OOBE"
-    Name  = "DisablePrivacyExperience"
-    Value = 1
-} | Group-Object Path
+$user = Get-LocalUser -Name 'EDU' -ErrorAction SilentlyContinue
+if ($null -eq $user) {
+    try {
+        $user = New-LocalUser @local_user -ErrorAction Stop
+        Write-Host "Created new local user 'EDU'."
+    } catch {
+        Write-Warning "Failed to create local user 'EDU': $($_.Exception.Message)"
+    }
+}
+if ($null -ne $user) {
+    try {
+        $user | Set-LocalUser -PasswordNeverExpires $true
+        Add-LocalGroupMember -Group "Administrators" -Member $user.Name -ErrorAction Stop
+    } catch {
+        Write-Warning "Failed to configure local user 'EDU': $($_.Exception.Message)"
+    }
+}
 
 foreach ($setting in $settings) {
     $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
@@ -84,12 +91,14 @@ foreach ($setting in $settings) {
 
 # Configure power settings
 # Disable sleep, hibernate and monitor standby on AC
-"powercfg /x -monitor-timeout-ac 0",
-"powercfg /x -standby-timeout-ac 0",
-"powercfg /x -hibernate-timeout-ac 0" | ForEach-Object {
-    cmd /c $_
+$powercfgCommands = @(
+    "-x -monitor-timeout-ac 0",
+    "-x -standby-timeout-ac 0",
+    "-x -hibernate-timeout-ac 0"
+)
+foreach ($cmd in $powercfgCommands) {
+    powercfg $cmd
 }
-# Restore Balanced plan after tasks
 Write-Host 'Setting PowerPlan to Balanced'
 Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 15
 powercfg /setactive 381B4222-F694-41F0-9685-FF5BB260DF2E | Out-Null
