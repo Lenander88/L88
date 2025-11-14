@@ -57,7 +57,7 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 
 # Create local admin account
 $local_user = @{
     Name                 = 'EDU'
-    NoPassword           = $true
+    Password           = 'Assa#26144'
 }
 $user = New-LocalUser @local_user 
 $user | Set-LocalUser -PasswordNeverExpires $true 
