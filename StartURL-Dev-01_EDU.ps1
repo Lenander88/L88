@@ -77,7 +77,7 @@ $form.ShowDialog()
 
 
 # After form closes, you can use $grouptag in your script
-Write-Host "GroupTag stored internally: $grouptag"
+Write-Host "GroupTag stored internally: $edu"
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
