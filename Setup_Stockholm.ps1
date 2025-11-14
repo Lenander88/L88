@@ -55,7 +55,7 @@ if (-not (Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker')) {
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 'PreventDeviceEncryption' -Value 1 -PropertyType DWord -Force | Out-Null
 
 # Create local admin account
-$Password = ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force
+$Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
 $local_user = @{
     Name     = 'EDU'
     Password = $Password
