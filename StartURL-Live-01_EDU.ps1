@@ -110,7 +110,7 @@ if ($serialNumber) {
 #=======================================================================
 
 Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
-$body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = 'https://prod-145.westus.logic.azure.com:443/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=n0urWoGWa2OXN-4ba0U7UwfEM8i9vwTuSHx2PrSVtvU'
+$body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = 'https://defaultf0bdc1c951484f86ac40edd976e181.4c.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=CZt0ePxAkBD147HaaTMZLxjZ9SuByOfVf-RYc5Ckl14'
 $result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "application/json; charset=utf-8" -UseBasicParsing    
 
 if ($result.Response -eq 0) {
