@@ -21,7 +21,8 @@ Add-Type -AssemblyName System.Windows.Forms
 Write-Host -BackgroundColor Black -ForegroundColor Green "Starting EDU Build Selection"
 Start-Sleep -Seconds 5
 
-$bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
+$bodyMessage = [PSCustomObject] @{}
+Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 
 # Path to CSV file
@@ -31,7 +32,7 @@ if (!(Test-Path $csvPath) -or ((Get-Item $csvPath).LastWriteTime -lt (Get-Date).
     Invoke-WebRequest -Uri $csvUrl -OutFile $csvPath
 }
 
-# Import CSV
+$options = Import-CSV $csvPath
 $options = Import-CSV ".\EDU.csv"
 
 # Create Form
@@ -102,7 +103,8 @@ if ($serialNumber) {
 #=======================================================================
 
 Write-Host -BackgroundColor Black -ForegroundColor Green "Start AutoPilot Verification"
-$body = $bodyMessage | ConvertTo-Json -Depth 5; $uri = 'https://defaultf0bdc1c951484f86ac40edd976e181.4c.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dadfcaca1bcc4b069c998a99e82ee728/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=CZt0ePxAkBD147HaaTMZLxjZ9SuByOfVf-RYc5Ckl14'
+$body = $bodyMessage | ConvertTo-Json -Depth 5
+$result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "application/json; charset=utf-8"
 $result = Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType "application/json; charset=utf-8" -UseBasicParsing    
 
 if ($result.Response -eq 0) {
@@ -115,10 +117,7 @@ if ($result.Response -eq 0) {
     Remove-Item .\OA3.xml -ErrorAction:SilentlyContinue
     .\oa3tool.exe /Report /ConfigFile=.\OA3.cfg /NoKeyCheck
 
-    if (Test-Path .\OA3.xml) {
-        [void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
-        [void][System.Reflection.Assembly]::LoadWithPartialName( "Microsoft.VisualBasic")
-        
+    if (Test-Path .\OA3.xml) {        
         $form = New-Object "System.Windows.Forms.Form";
         $form.Width = 500;
         $form.Height = 150;
@@ -148,7 +147,7 @@ if ($result.Response -eq 0) {
         $button.Top = 45;
         $button.Width = 100;
         $button.Text = "OK";
-        $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
+        $button.Cursor = [System.Windows.Forms.Cursors]::Hand
 
         $eventHandler = [System.EventHandler]{
         $cBox2.Text;
@@ -163,9 +162,6 @@ if ($result.Response -eq 0) {
 
             $script:locationResult = $cBox2.selectedItem 
         })
-  
-        $form.Controls.Add($button)
-        $form.Controls.Add($cBox2)
   
         $form.ShowDialog()
   
@@ -227,7 +223,6 @@ if (-not (Test-Path $setupPath)) {
 }
 
 # Run the selected EDU command (from ComboBox selection)
-# Run the selected EDU command (from ComboBox selection)
 Invoke-Expression $edu
 # Download SetupComplete.cmd
 Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
@@ -274,7 +269,7 @@ if (-not (Test-Path $setupPath)) {
 }
 
 # Run the selected EDU command (from ComboBox selection)
-Invoke-Expression $EDU
+Invoke-Expression $edu
 
 # Download SetupComplete.cmd
 Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
