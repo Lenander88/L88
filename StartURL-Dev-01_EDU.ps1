@@ -175,7 +175,7 @@ if ($result.Response -eq 0) {
         $form.ShowDialog()
   
         $grouptag = $script:locationResult
-        Write-Output $grouptag
+        #Write-Output $grouptag
 
         [xml]$xmlhash = Get-Content -Path .\OA3.xml
         $hash=$xmlhash.Key.HardwareHash
