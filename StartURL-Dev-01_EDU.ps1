@@ -85,7 +85,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.ShowDialog()
 
     $EDU = $script:locationResult
-    Write-Output "Selected command: $EDU"
+ #   Write-Output "Selected command: $EDU"
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
@@ -232,6 +232,7 @@ if (-not (Test-Path $setupPath)) {
 }
 
 # Run the selected EDU command (from ComboBox selection)
+Write-Output "Selected command: $EDU"
 Invoke-Expression $EDU
 
 # Download SetupComplete.cmd
