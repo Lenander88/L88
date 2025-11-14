@@ -11,21 +11,25 @@ $Params = @{
     Firmware = $false
 }
 
+# Group all Add-Type calls together for clarity
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName System.Windows.Forms
+
 #=======================================================================
 #   [PreOS] EDU Build Selection
 #=======================================================================
 Write-Host -BackgroundColor Black -ForegroundColor Green "Starting EDU Build Selection"
 Start-Sleep -Seconds 5
 
-Add-Type -AssemblyName PresentationFramework
 $bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 
-
-Add-Type -AssemblyName System.Windows.Forms
-
 # Path to CSV file
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv' -Outfile EDU.csv 
+$csvPath = ".\EDU.csv"
+$csvUrl = 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv'
+if (!(Test-Path $csvPath) -or ((Get-Item $csvPath).LastWriteTime -lt (Get-Date).AddDays(-1))) {
+    Invoke-WebRequest -Uri $csvUrl -OutFile $csvPath
+}
 
 # Import CSV
 $options = Import-CSV ".\EDU.csv"
@@ -46,7 +50,6 @@ $comboBox = New-Object System.Windows.Forms.ComboBox
 $comboBox.Location = New-Object System.Drawing.Point(50,20)
 $comboBox.Size = New-Object System.Drawing.Size(200,20)
 $comboBox.DropDownStyle = 'DropDownList'  # Prevent typing, only select
-$comboBox.Text = "EDU Build"
 
 # Populate ComboBox with OptionName from CSV
 foreach ($item in $options) {
@@ -59,7 +62,8 @@ $form.Controls.Add($comboBox)
 $okButton = New-Object System.Windows.Forms.Button
 $okButton.Text = "OK"
 $okButton.Location = New-Object System.Drawing.Point(100,60)
-$okButton.Add_Click({
+
+$okButtonClickHandler = {
     $selectedOption = $comboBox.SelectedItem
     if ($selectedOption) {
         # Assign corresponding Value to $edu (hidden from user)
@@ -68,16 +72,15 @@ $okButton.Add_Click({
     } else {
         [System.Windows.Forms.MessageBox]::Show("Please select an option.")
     }
-})
+}
+
+$okButton.Add_Click($okButtonClickHandler)
 
 $form.Controls.Add($okButton)
 
 # Show Form
 $form.ShowDialog()
 
-
-# After form closes, you can use $grouptag in your script
-Write-Host "GroupTag stored internally: $edu"
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
@@ -224,8 +227,8 @@ if (-not (Test-Path $setupPath)) {
 }
 
 # Run the selected EDU command (from ComboBox selection)
-Invoke-Expression $EDU
-
+# Run the selected EDU command (from ComboBox selection)
+Invoke-Expression $edu
 # Download SetupComplete.cmd
 Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
     -OutFile "$setupPath\SetupComplete.cmd"
