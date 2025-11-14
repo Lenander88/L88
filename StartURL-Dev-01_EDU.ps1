@@ -87,9 +87,6 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $EDU = $script:locationResult
     Write-Output "Selected command: $EDU"
 
-    # Optional: Execute the command
-    Invoke-Expression $EDU
-
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
 #=======================================================================
