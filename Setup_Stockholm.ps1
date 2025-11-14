@@ -100,7 +100,7 @@ foreach ($cmd in $powercfgCommands) {
     powercfg $cmd
 }
 Write-Host 'Setting PowerPlan to Balanced'
-Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 15
+#Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 15
 powercfg /setactive 381B4222-F694-41F0-9685-FF5BB260DF2E | Out-Null
 
 # Timing & wrap-up
