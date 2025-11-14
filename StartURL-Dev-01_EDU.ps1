@@ -25,7 +25,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
 Add-Type -AssemblyName System.Windows.Forms
 
 # Path to CSV file
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv' -Outfile EDU.csv 
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv' -Outfile EDU.csv 
 
 # Import CSV
 $options = Import-CSV ".\EDU.csv"
@@ -45,6 +45,7 @@ $textLabel2.Text = "EDU Build";
 $comboBox = New-Object System.Windows.Forms.ComboBox
 $comboBox.Location = New-Object System.Drawing.Point(50,20)
 $comboBox.Size = New-Object System.Drawing.Size(200,20)
+$comboBox.DropDownStyle = 'DropDownList'  # Prevent typing, only select
 $comboBox.Text = "EDU Build"
 
 # Populate ComboBox with OptionName from CSV
@@ -73,6 +74,10 @@ $form.Controls.Add($okButton)
 
 # Show Form
 $form.ShowDialog()
+
+
+# After form closes, you can use $grouptag in your script
+Write-Host "GroupTag stored internally: $grouptag"
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
