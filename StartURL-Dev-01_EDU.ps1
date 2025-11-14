@@ -22,70 +22,57 @@ $bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:Si
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 
 
-[void][System.Reflection.Assembly]::LoadWithPartialName( "System.Windows.Forms")
-[void][System.Reflection.Assembly]::LoadWithPartialName( "Microsoft.VisualBasic")
+Add-Type -AssemblyName System.Windows.Forms
 
-    $form = New-Object "System.Windows.Forms.Form";
-    $form.Width = 500;
-    $form.Height = 150;
-    $form.Text = "EDU Build";
-    $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
-    $form.ControlBox = $True
+# Path to CSV file
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv' -Outfile EDU.csv 
 
-    $textLabel2 = New-Object "System.Windows.Forms.Label";
-    $textLabel2.Left = 25;
-    $textLabel2.Top = 45;
-    $textLabel2.Text = "EDU Build";
+# Import CSV
+$options = Import-CSV ".\EDU.csv"
 
-    $cBox2 = New-Object "System.Windows.Forms.combobox";
-    $cBox2.Left = 150;
-    $cBox2.Top = 45;
-    $cBox2.width = 200;
-    $cBox2.Text = "EDU Build"
+# Create Form
+$form = New-Object System.Windows.Forms.Form
+$form.Text = "Select EDU Build"
+$form.Size = New-Object System.Drawing.Size(300,150)
+$form.StartPosition = "CenterScreen"
 
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU.csv' -Outfile EDU.csv 
+$textLabel2 = New-Object "System.Windows.Forms.Label";
+$textLabel2.Left = 25;
+$textLabel2.Top = 45;
+$textLabel2.Text = "EDU Build";
 
-# Create a hashtable to map names to URLs
-    $eduMap = @{}
+# Create ComboBox
+$comboBox = New-Object System.Windows.Forms.ComboBox
+$comboBox.Location = New-Object System.Drawing.Point(50,20)
+$comboBox.Size = New-Object System.Drawing.Size(200,20)
+$comboBox.Text = "EDU Build"
 
-    Import-Csv ".\EDU.csv" | ForEach-Object {
-    $eduMap[$_.EDU] = $_.Command
-    $cBox2.Items.Add($_.EDU) | Out-Null
-    }
+# Populate ComboBox with OptionName from CSV
+foreach ($item in $options) {
+    $comboBox.Items.Add($item.OptionName)
+}
 
+$form.Controls.Add($comboBox)
 
-
-    $button = New-Object "System.Windows.Forms.Button";
-    $button.Left = 360;
-    $button.Top = 45;
-    $button.Width = 100;
-    $button.Text = "OK";
-    $Button.Cursor = [System.Windows.Forms.Cursors]::Hand
-
-    $eventHandler = [System.EventHandler]{
-    $cBox2.Text;
-    $form.Close();};
-    $button.Add_Click($eventHandler) ;
-
-    $form.Controls.Add($button);
-    $form.Controls.Add($textLabel2);
-    $form.Controls.Add($cBox2);
-
-
-    $button.add_Click({
-        $selectedName = $cBox2.SelectedItem
-        $script:locationResult = $eduMap[$selectedName]
+# Create OK Button
+$okButton = New-Object System.Windows.Forms.Button
+$okButton.Text = "OK"
+$okButton.Location = New-Object System.Drawing.Point(100,60)
+$okButton.Add_Click({
+    $selectedOption = $comboBox.SelectedItem
+    if ($selectedOption) {
+        # Assign corresponding Value to $edu (hidden from user)
+        $global:edu = ($options | Where-Object { $_.OptionName -eq $selectedOption }).Value
         $form.Close()
-    })
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Please select an option.")
+    }
+})
 
+$form.Controls.Add($okButton)
 
-    $form.Controls.Add($button)
-    $form.Controls.Add($cBox2)
-
-    $form.ShowDialog()
-
-    $EDU = $script:locationResult
-    Write-Host "Selected command: $EDU"
+# Show Form
+$form.ShowDialog()
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
