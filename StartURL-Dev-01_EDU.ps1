@@ -85,7 +85,7 @@ $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty 
     $form.ShowDialog()
 
     $EDU = $script:locationResult
- #   Write-Output "Selected command: $EDU"
+    Write-Host "Selected command: $EDU"
 
 #=======================================================================
 #   [PreOS] Detect Serial Number and Prepare for AutoPilot
@@ -175,7 +175,7 @@ if ($result.Response -eq 0) {
         $form.ShowDialog()
   
         $grouptag = $script:locationResult
-        #Write-Output $grouptag
+        Write-Host $grouptag
 
         [xml]$xmlhash = Get-Content -Path .\OA3.xml
         $hash=$xmlhash.Key.HardwareHash
@@ -232,7 +232,6 @@ if (-not (Test-Path $setupPath)) {
 }
 
 # Run the selected EDU command (from ComboBox selection)
-Write-Output "Selected command: $EDU"
 Invoke-Expression $EDU
 
 # Download SetupComplete.cmd
