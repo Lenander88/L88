@@ -172,56 +172,6 @@ if ($result.Response -eq 0) {
 
         # Show Form
         $form.ShowDialog()
-        
-        $form = New-Object "System.Windows.Forms.Form";
-        $form.Width = 500;
-        $form.Height = 150;
-        $form.Text = "Digital Workplace Group Tag";
-        $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen;
-        $form.ControlBox = $True
-
-        $textLabel2 = New-Object "System.Windows.Forms.Label";
-        $textLabel2.Left = 25;
-        $textLabel2.Top = 45;
-        $textLabel2.Text = "Group tag";
-        
-        $cBox2 = New-Object "System.Windows.Forms.combobox";
-        $cBox2.Left = 150;
-        $cBox2.Top = 45;
-        $cBox2.width = 200;
-        $cBox2.Text = "Choose group tag"
-
-        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lenander88/L88/main/grouptags.csv' -Outfile grouptags.csv 
-        Import-CSV ".\grouptags.csv" | ForEach-Object {
-            $cBox2.Items.Add($_.grouptags)| out-null
-            
-        }
-
-        $button = New-Object "System.Windows.Forms.Button";
-        $button.Left = 360;
-        $button.Top = 45;
-        $button.Width = 100;
-        $button.Text = "OK";
-        $button.Cursor = [System.Windows.Forms.Cursors]::Hand
-
-        $eventHandler = [System.EventHandler]{
-        $cBox2.Text;
-        $form.Close();};
-        $button.Add_Click($eventHandler) ;
-
-        $form.Controls.Add($button);
-        $form.Controls.Add($textLabel2);
-        $form.Controls.Add($cBox2);
-
-        $button.add_Click({    
-
-            $script:locationResult = $cBox2.selectedItem 
-        })
-  
-        $form.ShowDialog()
-  
-        $grouptag = $script:locationResult
-        Write-Host $grouptag
 
         [xml]$xmlhash = Get-Content -Path .\OA3.xml
         $hash=$xmlhash.Key.HardwareHash
