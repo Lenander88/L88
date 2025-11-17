@@ -89,10 +89,10 @@ Import-Module OSD -Force
 
 Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
 Start-OSDCloud @Params
+
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
-
 Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
 
 # Ensure PSWindowsUpdate is staged for post-boot use
@@ -106,6 +106,7 @@ if (-not (Test-Path $setupPath)) {
 
 # Run the selected EDU command (from ComboBox selection)
 Invoke-Expression $edu
+
 # Download SetupComplete.cmd
 Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
     -OutFile "$setupPath\SetupComplete.cmd"
