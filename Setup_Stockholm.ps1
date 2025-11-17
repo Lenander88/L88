@@ -55,10 +55,10 @@ if (-not (Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker')) {
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 'PreventDeviceEncryption' -Value 1 -PropertyType DWord -Force | Out-Null
 
 # Create local admin account
-$Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
+$Secure_String_Pwd = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
 $local_user = @{
     Name     = 'EDU'
-    Password = $Password
+    Password = $Secure_String_Pwd
 }
 $user = Get-LocalUser -Name 'EDU' -ErrorAction SilentlyContinue
 if ($null -eq $user) {
@@ -94,8 +94,11 @@ foreach ($setting in $settings) {
 $powercfgCommands = @(
     "-x -monitor-timeout-ac 0",
     "-x -standby-timeout-ac 0",
-    "-x -hibernate-timeout-ac 0"
+    "-x -standby-timeout-dc 0",
+    "-x -hibernate-timeout-ac 0",
+    "-x -hibernate-timeout-dc 0"
 )
+
 foreach ($cmd in $powercfgCommands) {
     powercfg $cmd
 }

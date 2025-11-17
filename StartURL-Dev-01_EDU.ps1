@@ -4,7 +4,7 @@
 $Params = @{
     OSVersion = "Windows 11"
     OSBuild = "24H2"
-    OSEdition = "Pro"
+    OSEdition = "Enterprise"
     OSLanguage = "en-us"
     OSLicense = "Retail"
     ZTI = $true
