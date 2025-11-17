@@ -84,6 +84,10 @@ if ($null -ne $user) {
 
 $bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+#Renaming to LT-[serialnumber]
+Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
+
+# Apply registry settings
 foreach ($setting in $settings) {
     $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
     if ($null -eq $registry) {
@@ -94,8 +98,6 @@ foreach ($setting in $settings) {
     }
     $registry.Dispose()
 }
-#Renaming to LT-[serialnumber]
-Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
 
 # Configure power settings
 # Disable sleep, hibernate and monitor standby on AC
