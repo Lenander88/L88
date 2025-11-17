@@ -48,6 +48,10 @@ if (Test-Path $SetupCompletePath) {
     Write-Host "No custom SetupComplete.cmd found at $SetupCompletePath"
 }
 
+# Renaming to SESTV-[serialnumber]
+$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
+
 # Sets property in registry to disable Windows automatic encrytion from start during oobe phase, it does not block Intune bitlocker policy from encrypting devices post enrollment.  
 # https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/
 Write-Host "Disable Windows Automatic Encryption"
@@ -82,10 +86,6 @@ if ($null -ne $user) {
     }
 }
 
-$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
-#Renaming to LT-[serialnumber]
-Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
-
 # Apply registry settings
 foreach ($setting in $settings) {
     $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
@@ -99,7 +99,10 @@ foreach ($setting in $settings) {
 }
 
 # Configure power settings
-# Disable sleep, hibernate and monitor standby on AC
+Write-Host 'Setting PowerPlan to Balanced'
+
+# Disable sleep, hibernate and monitor standby on AC and DC power
+powercfg /setactive 381B4222-F694-41F0-9685-FF5BB260DF2E | Out-Null
 $powercfgCommands = @(
     "-x -monitor-timeout-ac 0",
     "-x -standby-timeout-ac 0",
@@ -111,9 +114,7 @@ $powercfgCommands = @(
 foreach ($cmd in $powercfgCommands) {
     powercfg $cmd
 }
-Write-Host 'Setting PowerPlan to Balanced'
-#Set-PowerSettingTurnMonitorOffAfter -PowerSource AC -Minutes 15
-powercfg /setactive 381B4222-F694-41F0-9685-FF5BB260DF2E | Out-Null
+
 
 # Timing & wrap-up
 $EndTime = Get-Date
