@@ -1,0 +1,100 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\StartURL-Dev-01_EDU.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:StartURL-Dev-01_EDU.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\Setup_Stockholm.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Setup_Stockholm.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\grouptags_Dev.csv||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:grouptags_Dev.csv||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\EDU_Dev.csv||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:EDU_Dev.csv||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StartURL-Dev-01_EDU.ps1",
+              "DocumentMoniker": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\StartURL-Dev-01_EDU.ps1",
+              "RelativeDocumentMoniker": "StartURL-Dev-01_EDU.ps1",
+              "ToolTip": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\StartURL-Dev-01_EDU.ps1",
+              "RelativeToolTip": "StartURL-Dev-01_EDU.ps1",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-17T10:09:25.508Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Setup_Stockholm.ps1",
+              "DocumentMoniker": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\Setup_Stockholm.ps1",
+              "RelativeDocumentMoniker": "Setup_Stockholm.ps1",
+              "ToolTip": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\Setup_Stockholm.ps1",
+              "RelativeToolTip": "Setup_Stockholm.ps1",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-17T10:09:25.426Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "grouptags_Dev.csv",
+              "DocumentMoniker": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\grouptags_Dev.csv",
+              "RelativeDocumentMoniker": "grouptags_Dev.csv",
+              "ToolTip": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\grouptags_Dev.csv",
+              "RelativeToolTip": "grouptags_Dev.csv",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002120|",
+              "WhenOpened": "2025-11-17T10:09:25.398Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EDU_Dev.csv",
+              "DocumentMoniker": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\EDU_Dev.csv",
+              "RelativeDocumentMoniker": "EDU_Dev.csv",
+              "ToolTip": "C:\\Users\\matlen\\source\\repos\\Lenander88\\L88\\EDU_Dev.csv",
+              "RelativeToolTip": "EDU_Dev.csv",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002120|",
+              "WhenOpened": "2025-11-17T10:09:25.046Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

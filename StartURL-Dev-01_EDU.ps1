@@ -4,11 +4,11 @@
 $Params = @{
     OSVersion = "Windows 11"
     OSBuild = "24H2"
-    OSEdition = "Enterprise"
+    OSEdition = "Pro"
     OSLanguage = "en-us"
     OSLicense = "Retail"
     ZTI = $true
-    Firmware = $false
+    Firmware = $true
 }
 
 # Group all Add-Type calls together for clarity
@@ -203,15 +203,15 @@ if ($result.Response -eq 0) {
 #=======================================================================
 #   [OS] Start-OSDCloud and update OSD Module
 #=======================================================================
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
-    Install-Module OSD -Force
+Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
+Install-Module OSD -Force
 
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
-    Import-Module OSD -Force   
+Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
+Import-Module OSD -Force   
 
 
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud @Params
+Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
+Start-OSDCloud @Params
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
@@ -243,50 +243,3 @@ Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.p
     Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
     Start-Sleep -Seconds 20
     wpeutil reboot
-
-} else {
-
-#=======================================================================
-#   [OS] Start-OSDCloud and update OSD Module
-#=======================================================================
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Updating OSD PowerShell Module"
-    Install-Module OSD -Force
-
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Importing OSD PowerShell Module"
-    Import-Module OSD -Force
-
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Start OSDCloud"
-    Start-OSDCloud @Params
-
-#================================================
-#  [PostOS] SetupComplete CMD Command Line
-#================================================
-
-Write-Host -BackgroundColor Black -ForegroundColor Green "Stage SetupComplete"
-
-# Ensure PSWindowsUpdate is staged for post-boot use
-Save-Module -Name PSWindowsUpdate -Path 'C:\Program Files\WindowsPowerShell\Modules' -Force
-
-# Ensure SetupComplete folder exists
-$setupPath = 'C:\OSDCloud\Scripts\SetupComplete'
-if (-not (Test-Path $setupPath)) {
-    New-Item -Path $setupPath -ItemType Directory -Force | Out-Null
-}
-
-# Run the selected EDU command (from ComboBox selection)
-Invoke-Expression $edu
-
-# Download SetupComplete.cmd
-Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/SetupComplete.cmd' `
-    -OutFile "$setupPath\SetupComplete.cmd"
-
-# Download Install-LCU.ps1
-Invoke-WebRequest -Uri 'https://github.com/Lenander88/L88/raw/main/Install-LCU.ps1' `
-    -OutFile "$setupPath\Install-LCU.ps1"
-#=======================================================================
-#   Restart-Computer
-#=======================================================================    
-    Write-Host -BackgroundColor Black -ForegroundColor Green "Restart in 20 seconds"
-    Start-Sleep -Seconds 20
-    wpeutil reboot
-}
