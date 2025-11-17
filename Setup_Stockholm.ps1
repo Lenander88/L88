@@ -22,6 +22,7 @@ try {
     Write-Warning "Could not load _anywhere.psm1: $($_.Exception.Message)"
 }
 Start-Sleep -Seconds 10
+Add-Type -AssemblyName PresentationFramework
 
 # Power plan: High performance during post-setup
 Write-Host 'Setting PowerPlan to High Performance'
@@ -55,10 +56,13 @@ if (-not (Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker')) {
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 'PreventDeviceEncryption' -Value 1 -PropertyType DWord -Force | Out-Null
 
 # Create local admin account
-$Secure_String_Pwd = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
+
+$Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
 $local_user = @{
     Name     = 'EDU'
-    Password = $Secure_String_Pwd
+    Password = $Password
+    FullName = 'Education User'
+    Description = 'Local administrator account for EDU purposes'
 }
 $user = Get-LocalUser -Name 'EDU' -ErrorAction SilentlyContinue
 if ($null -eq $user) {
@@ -78,6 +82,8 @@ if ($null -ne $user) {
     }
 }
 
+$bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
+$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 foreach ($setting in $settings) {
     $registry = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($setting.Name, $true)
     if ($null -eq $registry) {
@@ -88,6 +94,8 @@ foreach ($setting in $settings) {
     }
     $registry.Dispose()
 }
+#Renaming to LT-[serialnumber]
+Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
 
 # Configure power settings
 # Disable sleep, hibernate and monitor standby on AC
