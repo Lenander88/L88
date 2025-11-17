@@ -82,7 +82,6 @@ if ($null -ne $user) {
     }
 }
 
-$bodyMessage = [PSCustomObject] @{}; Clear-Variable serialNumber -ErrorAction:SilentlyContinue
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 #Renaming to LT-[serialnumber]
 Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
