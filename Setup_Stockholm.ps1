@@ -63,7 +63,7 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 
 
 # Create local admin account
 
-$Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
+#$Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
 $local_user = @{
     Name     = 'EDU'
 #   Password = $Password
