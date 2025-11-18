@@ -49,7 +49,8 @@ if (Test-Path $SetupCompletePath) {
 }
 
 # Renaming to SESTV-[serialnumber]
-$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+$serialNumber = (Get-CimInstance Win32_BIOS).SerialNumber
+#$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 $NewComputerName = "SESTV-$serialNumber"
 Write-Host "Renaming computer to $NewComputerName"
 Rename-Computer -NewName $NewComputerName -Force -Restart:$false
