@@ -50,7 +50,9 @@ if (Test-Path $SetupCompletePath) {
 
 # Renaming to SESTV-[serialnumber]
 $serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
-Rename-Computer -NewName "SESTV-$serialNumber" -Force -Restart:$false
+$NewComputerName = "SESTV-$serialNumber"
+Write-Host "Renaming computer to $NewComputerName"
+Rename-Computer -NewName $NewComputerName -Force -Restart:$false
 
 # Sets property in registry to disable Windows automatic encrytion from start during oobe phase, it does not block Intune bitlocker policy from encrypting devices post enrollment.  
 # https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/
@@ -64,7 +66,8 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\BitLocker' -Name 
 $Password = ConvertTo-SecureString "Assa#26144" -AsPlainText -Force
 $local_user = @{
     Name     = 'EDU'
-    Password = $Password
+#   Password = $Password
+    NoPassword = $true
     FullName = 'Education User'
     Description = 'Local administrator account for EDU purposes'
 }
