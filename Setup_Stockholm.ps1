@@ -49,11 +49,18 @@ if (Test-Path $SetupCompletePath) {
 }
 
 # Renaming to SESTV-[serialnumber]
-$serialNumber = (Get-CimInstance Win32_BIOS).SerialNumber
-#$serialNumber = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
-$NewComputerName = "SESTV-$serialNumber"
-Write-Host "Renaming computer to $NewComputerName"
-Rename-Computer -NewName $NewComputerName -Force -Restart:$false
+# Test if serial number can be retrieved rename computer accordingly otherwise log error message.
+
+if ((Get-CimInstance Win32_BIOS).SerialNumber) {
+    Write-Host "Retrieving Device Serial Number"
+    $serialNumber = (Get-CimInstance Win32_BIOS).SerialNumber
+    $NewComputerName = "SESTV-$serialNumber"
+    Write-Host "Renaming computer to $NewComputerName"
+    Rename-Computer -NewName $NewComputerName -Force -Restart:$false
+} else {
+    $errorMessage = "Error: Unable to retrieve the device serial number. The computer will not be renamed."
+    Write-Host -BackgroundColor Black -ForegroundColor Red $errorMessage
+}
 
 # Sets property in registry to disable Windows automatic encrytion from start during oobe phase, it does not block Intune bitlocker policy from encrypting devices post enrollment.  
 # https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/
