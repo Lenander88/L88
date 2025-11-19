@@ -22,7 +22,7 @@ Write-Host -BackgroundColor Black -ForegroundColor Green "Starting EDU Build Sel
 Start-Sleep -Seconds 5
 
 # Path to CSV file
-$csvPath = ".\EDU.csv"
+$csvPath = ".\EDU_Dev.csv"
 $csvUrl = 'https://raw.githubusercontent.com/Lenander88/L88/main/EDU_Dev.csv'
 if (!(Test-Path $csvPath) -or ((Get-Item $csvPath).LastWriteTime -lt (Get-Date).AddDays(-1))) {
     Invoke-WebRequest -Uri $csvUrl -OutFile $csvPath
