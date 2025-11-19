@@ -31,10 +31,11 @@ if (!(Test-Path $csvPath) -or ((Get-Item $csvPath).LastWriteTime -lt (Get-Date).
 $options = Import-CSV $csvPath
 
 # Create Form
-$form = New-Object System.Windows.Forms.Form
+$form = New-Object "System.Windows.Forms.Form"
 $form.Text = "Select EDU Build"
-$form.Size = New-Object System.Drawing.Size(300,150)
+$form.Size = New-Object "System.Drawing.Size"(300,150)
 $form.StartPosition = "CenterScreen"
+$form.ControlBox = $True
 
 $textLabel2 = New-Object "System.Windows.Forms.Label";
 $textLabel2.Left = 25;
@@ -42,10 +43,10 @@ $textLabel2.Top = 45;
 $textLabel2.Text = "EDU Build";
 
 # Create ComboBox
-$comboBox = New-Object System.Windows.Forms.ComboBox
-$comboBox.Location = New-Object System.Drawing.Point(50,20)
-$comboBox.Size = New-Object System.Drawing.Size(200,20)
-$comboBox.DropDownStyle = 'DropDownList'  # Prevent typing, only select
+$comboBox = New-Object "System.Windows.Forms.ComboBox"
+$comboBox.Location = New-Object "System.Drawing.Point"(50,20)
+$comboBox.Size = New-Object "System.Drawing.Size"(200,20)
+$comboBox.DropDownStyle = "DropDownList"  # Prevent typing, only select
 
 # Populate ComboBox with OptionName from CSV
 foreach ($item in $options) {
