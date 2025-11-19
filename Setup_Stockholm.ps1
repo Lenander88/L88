@@ -59,7 +59,7 @@ if ((Get-CimInstance Win32_BIOS).SerialNumber) {
     Rename-Computer -NewName $NewComputerName -Force -Restart:$false
 } else {
     $errorMessage = "Error: Unable to retrieve the device serial number. The computer will not be renamed."
-    Write-Host -BackgroundColor Black -ForegroundColor Red $errorMessage
+    Write-Host $errorMessage
 }
 
 # Sets property in registry to disable Windows automatic encrytion from start during oobe phase, it does not block Intune bitlocker policy from encrypting devices post enrollment.  
